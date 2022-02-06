@@ -1,0 +1,141 @@
+.help
+
+Создать (или открыть) базу данных
+.open dbase.db
+
+Список подключенных баз данных
+.databases
+
+Выход
+.quit
+.exit
+
+Изменить режим отображения таблиц
+.mode box
+
+Создать таблицу пользователей из csv
+.mode csv
+.import users.csv user
+
+Посмотреть пользователей
+select * from user limit(5);
+
+Таблицы
+.tables
+
+Схема таблицы
+.schema user
+
+Удалить таблицу
+drop table user;
+
+Добавить id - напрямую не можем
+ALTER TABLE user ADD COLUMN id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT;
+
+Поэтому создаем еще одну таблицу
+create table user2(
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	surname TEXT NOT NULL,
+	name TEXT NOT NULL,
+    patronymic TEXT,
+    login TEXT NULL,
+	password TEXT NULL);
+	
+Добавить все записи из таблицы user в таблицу user2
+insert into user2 (surname, name, patronymic, login, password)
+select surname, name, patronymic, login, password
+from user;
+
+Удалить предыдущую таблицу и переименовать новую
+select * from user2 limit(5);
+drop table user;
+alter table user2 rename to user;
+
+Паспорта
+create table passport(
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,	
+	number TEXT NOT NULL,
+    user_id integer,
+	FOREIGN KEY(user_id) REFERENCES user(id));
+
+Связь один-к-одному
+SELECT user.id, name, surname, passport.number 
+FROM user
+INNER JOIN passport ON user.id=passport.user_id
+limit(10);
+
+Очистить экран
+.shell cls
+
+Продукты
+create table product2(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL,
+price INTEGER NOT NULL);
+
+Импорт из csv
+.mode csv
+.import products2.csv product
+
+Добавить все записи из таблицы product в таблицу product2
+insert into product2 ( name, price)
+select  name, price
+from product;
+
+drop table product;
+alter table product2 rename to product;
+
+Покупки
+create table purchase(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+date_stamp TEXT NOT NULL,
+count INTEGER NOT NULL,
+user_id integer,
+product_id integer,
+FOREIGN KEY(user_id) REFERENCES user(id),
+FOREIGN KEY(product_id) REFERENCES product(id));
+
+.mode csv
+.import purchase.csv purchase2
+
+insert into purchase ( date_stamp, count, user_id, product_id)
+select  date, count, user_id, product_id
+from purchase2;
+
+drop table purchase2;
+
+Комментарии
+CREATE TABLE comment (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,    
+	comment TEXT NOT NULL,
+	user_id integer,	
+	FOREIGN KEY(user_id) REFERENCES user(id)    
+);
+
+.mode csv
+.import comment.csv comment2
+
+insert into comment ( comment, user_id)
+select  name, user_id
+from comment2;
+
+drop table comment2;
+
+Пользовательские комментарии - не надо
+CREATE TABLE user_comment(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+date_stamp TEXT NOT NULL,
+user_id integer,
+comment_id integer,
+FOREIGN KEY(user_id) REFERENCES user(id),
+FOREIGN KEY(comment_id) REFERENCES comment(id));
+
+.mode csv
+.import user_comment.csv user_comment2
+
+insert into user_comment ( date_stamp, user_id, comment_id)
+select  date_stamp, user_id, comment_id
+from user_comment2;
+
+drop table user_comment2;
+drop table user_comment;

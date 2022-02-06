@@ -1,0 +1,174 @@
+Количество пользователей
+select count(*) from user;
+
+Отличающиеся имена пользователей
+select distinct name from user;
+
+Количество отличающихся имен пользователей
+select count(distinct name) from user;
+
+Вывести разные имена и количество людей с этими именами
+select name, count(name) as count 
+from user 
+group by name 
+order by count desc;
+
+Выбрать пользователей и их паспорта
+SELECT user.name, user.surname, passport.number FROM user
+INNER JOIN passport ON user.id=passport.user_id limit(20);
+
+Вывести пользователей и количество их сообщений
+select user.name, user.surname, comment.comment from user
+inner join comment ON user.id=comment.user_id limit(20);
+
+Удалить первый комментарий
+select * from comment limit 10;
+delete from comment where id=1;
+select * from comment limit 10;
+
+Вывести вторые 10 комментариев
+select * from comment limit 10 offset 10;
+select * from comment limit 10,10;
+
+Вывести последние 10 комментариев
+SELECT * FROM comment LIMIT 10 OFFSET (select count(*) from comment)-10;
+select * from
+(SELECT * FROM comment ORDER BY id DESC LIMIT 10) ORDER BY id;
+
+Вывести первые 10 комментариев с четными id
+select * from comment where id%2==0 limit 10;
+
+Вывести общее количество комментариев и количество пользователей, оставивших комментарии
+select count(*) from user
+inner join comment on user.id = comment.user_id
+union all
+select count(*) from comment where user_id is not null;
+
+select 
+(select count(*) from user inner join comment on user.id = comment.user_id) as count1,
+(select count(*) from comment where user_id is not null) as count2;
+
+Вывести пользователей, у которых 2 и более комментария
+select count(*) from comment group by user_id; 
+
+select u.name, u.surname, c.count
+  from user u
+  INNER join (SELECT user_id, count(*) AS count
+                FROM comment
+                GROUP BY user_id) c 
+    on u.id = c.user_id;
+	
+Вывести топ 10 пользователей по количеству комментариев
+select u.name, u.surname, c.count
+  from user u
+  INNER join (SELECT user_id, count(*) AS count
+                FROM comment
+                GROUP BY user_id) c 
+    on u.id = c.user_id order by count desc limit(10);
+
+Вывести все комментарии, содержащие слово "good"
+select comment from comment where comment LIKE '%good%';
+
+Вывести повторяющиеся комментарии и количество их повторений
+SELECT comment, COUNT(id) as count
+FROM comment
+GROUP BY user_id
+HAVING count > 1 order by count desc limit (10);
+
+Вывести среднее значение цены покупки
+select avg(count*price) from
+(select * from purchase as pu
+inner join product as pr on pr.id=pu.product_id limit (10)) as p;
+
+Вывести пользователей, у которых имя начинается на "А" и цена купленного товара составляет до 10.00 руб.
+select u.name, u.surname, pu.date_stamp, pr.name, pr.price
+from user as u, purchase as pu, product as pr
+where u.id = pu.user_id and pu.product_id=pr.id and pr.price<1000 and u.name like "А%";
+
+Самый дорогой товар
+select * from
+(select id, name, max(price)/100 from product);
+
+Самый популярный товар (куплено максимальное количество единиц)
+select pr.id, pr.name, sum(pu.count) as count from product as pr
+left join purchase as pu on pu.product_id=pr.id
+group by pr.id
+order by count desc
+limit 10;
+
+Проверка популярного товара
+select * from purchase where product_id =1438;
+
+Топ 10 товаров по цене
+select id, name, price/100 from product
+order by price/100 desc limit 10;
+
+Суммарная стоимость покупок за 2018 г.
+select sum(price*count/100) from
+(SELECT date_stamp,
+(substr(date_stamp,1,4)) as year, count, product.price from purchase
+inner join product on purchase.product_id=product.id
+where year='2018') as purchase2018;
+
+Топ 10 самых активных покупателей в 2018 г.
+select pu.date_stamp, (substr(pu.date_stamp,1,4)) as year, (pu.count*pr.price/100) as purchase, u.name, u.surname from purchase as pu
+inner join product as pr on pu.product_id=pr.id
+inner join user as u on pu.user_id = u.id
+where year='2018'
+order by purchase desc
+limit 10;
+
+Вывести 10 пользователей, не имеющих паспорта
+SELECT u.id, u.name, u.surname, p.number as passport FROM user as u
+left join passport as p on p.user_id=u.id
+where passport is null
+limit 10;
+
+Количество пользователей, имеющих паспорт и не имеющих паспорта
+select count(*) from
+(SELECT u.id, u.name, u.surname, p.number as passport FROM user as u
+left join passport as p on p.user_id=u.id
+where passport is null)
+union all
+select count(*) from
+(SELECT u.id, u.name, u.surname, p.number as passport FROM user as u
+left join passport as p on p.user_id=u.id
+where passport is not null);
+
+Название самого короткого и самого длинного названий продуктов
+select id, name, max(length(name)) from product
+union
+select id, name, min(length(name)) from product;
+
+Самое короткое и самое длинное имя, фамилия
+select surname, max(length(surname)) from user
+union
+select surname, min(length(surname)) from user;
+
+Пользователь, напечатавший максимальное количество символов в своих комментариях
+select u.id, u.name, u.surname, c.count
+  from user u
+  INNER join (SELECT user_id, sum(length(comment)) AS count
+                FROM comment
+                GROUP BY user_id) c 
+    on u.id = c.user_id order by count desc limit(10);
+
+Проверка
+select u.id, u.name, u.surname, length(c.comment), sum(length(c.comment))
+from user u
+inner join comment as c on c.user_id = u.id and u.id=365
+group by u.id;
+
+Вывести дату с максимальной выручкой
+select date_stamp, sum(purchase) as total from
+(select pu.date_stamp, pu.count, pr.name, pr.price, (pu.count*pr.price/100) as purchase
+from purchase as pu
+inner join product as pr on pu.product_id=pr.id) as pu
+group by pu.date_stamp
+order by total desc limit 1;
+
+Проверка
+select pu.date_stamp, pu.count, pr.name, pr.price, (pu.count*pr.price/100) as purchase
+from purchase as pu
+inner join product as pr on pu.product_id=pr.id
+where pu.date_stamp='2012/04/07'; 

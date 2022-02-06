@@ -1,0 +1,164 @@
+.help
+
+Создать (или открыть) базу данных
+.open dbase.db
+
+Сохранить, если до этого название базы данных не задавалось
+.save ex1.db
+
+Список подключенных баз данных
+.databases
+
+Выход
+.quit
+.exit
+
+Создать таблицу hello
+create table hello(message varchar(10), count smallint);
+insert into hello values('hello!',10);
+insert into hello values('bye!',20);
+select * from hello;
+
+Таблицы
+.tables
+
+Схема таблицы
+.schema hello
+
+Удалить таблицу
+drop table hello;
+
+Изменить режим отображения таблиц
+.mode column
+.mode markdown
+.mode box
+
+CREATE TABLE urls (url STRING);
+INSERT INTO urls VALUES
+    ('https://packages.debian.org/stretch/sqlite3'),
+    ('https://docs.python.org/3/library/sqlite3.html'),
+    ('https://sqlite.org/about.html');
+	
+SELECT COUNT(*) FROM urls;
+	
+attach 'northwind.db' as north;
+
+Из sql файла
+.read myscript.sql
+
+Вывод результатов запроса в файл
+.mode list
+.separator |
+.output test_file_1.txt
+select * from hello;
+.exit
+
+Создать таблицу пользователей из csv
+.mode csv
+.import users.csv user
+
+select * from user limit(5);
+
+Добавить пароль
+ALTER TABLE user ADD COLUMN password text default 'user' not null;
+
+Добавить id - напрямую не можем
+ALTER TABLE user ADD COLUMN id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT;
+
+Поэтому создаем еще одну таблицу
+
+
+Очистить экран
+.shell cls
+
+Записать изображение в базу данныхы
+CREATE TABLE images(name TEXT, type TEXT, img BLOB);
+INSERT INTO images(name,type,img)
+VALUES('icon','jpeg',readfile('icon.jpg'));
+
+Прочитать изображение из базы данных
+SELECT writefile('icon.jpg',img) FROM images WHERE name='icon';
+
+Дамп в файл
+.output d:/sqlite/example.sql
+.dump
+.exit
+
+Только одну таблицу
+.output c:/sqlite/albums.sql
+.dump albums
+.quit
+
+Только схему
+.output c:/sqlite/chinook_structure.sql
+.schema
+.quit
+
+CREATE TABLE comments (
+    post_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    website_url TEXT NULL,
+    comment TEXT NOT NULL );
+
+INSERT INTO comments ( name, email, website_url, comment )
+VALUES ( 'Shivam Mamgain', 'xyz@gmail.com',
+'shivammg.blogspot.com', 'Great tutorial for beginners.' );
+
+https://shultais.education/blog/sql-for-beginners/first-sql-queries
+
+create table product(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL,
+count INTEGER NOT NULL,
+price INTEGER NOT NULL);
+
+insert into product(name,count,price) values ('Телевизор',3,4320000);
+insert into product(name,count,price) values ('Микроволновая печь',4,320000);
+insert into product(name,count,price) values ('Холодильник',3,1200000);
+insert into product(name,count,price) values ('Роутер',1,134000);
+insert into product(name,count,price) values ('Компьютер',0,2615000);
+
+SELECT name, count, printf("%.2f руб.", price/100) AS price FROM product;
+
+create table user(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL,
+surname TEXT,
+birthdate TEXT);
+
+insert into user(name,surname,birthdate) values ('Дмитрий','Иванов','1996-12-11');
+insert into user(name,surname,birthdate) values ('Олег','Лебедев','2000-02-07');
+insert into user(name,surname,birthdate) values ('Тимур','	Шевченко','1998-04-27');
+insert into user(name,surname,birthdate) values ('Светлана','Ивановаv','1993-08-06');
+insert into user(name,surname,birthdate) values ('Олег','Ковалев','2002-02-08');
+insert into user(name,surname,birthdate) values ('Алексей','Иванов','1993-08-05');
+insert into user(name,surname,birthdate) values ('Алена','Процук','1997-02-28');
+
+Связь один-к-одному
+create table passport(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+number TEXT NOT NULL,
+user_id integer,
+FOREIGN KEY(user_id) REFERENCES user(id));
+
+insert into passport(number,user_id) values ('ВМ2929232',1);
+
+SELECT user.id, name, surname, passport.number
+FROM user
+INNER JOIN passport ON user.id=passport.user_id;
+
+Связь один-ко-многим
+CREATE TABLE post (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    user_id integer,
+	comment TEXT NOT NULL,	
+	FOREIGN KEY(user_id) REFERENCES user(id)    
+);
+
+INSERT INTO post (user_id, comment) VALUES ( 1, 'comment 1 from user 1');
+INSERT INTO post (user_id, comment) VALUES ( 1, 'comment 2 from user 1');
+
+SELECT name, surname, post.comment
+FROM user
+INNER JOIN post ON user.id=post.user_id;
