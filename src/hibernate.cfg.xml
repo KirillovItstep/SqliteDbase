@@ -9,16 +9,12 @@
             jdbc:sqlite:C:\Users\vadim\IdeaProjects\SqliteDbase\src\org\itstep\base\dbase.db
         </property>
         <property name="hibernate.dialect">com.enigmabridge.hibernate.dialect.SQLiteDialect</property>
+        <mapping class="entity.UserEntity"/>
         <mapping class="entity.CommentEntity"/>
-        <mapping resource="entity/CommentEntity.hbm.xml"/>
         <mapping class="entity.PassportEntity"/>
-        <mapping resource="entity/PassportEntity.hbm.xml"/>
-        <mapping resource="entity/ProductEntity.hbm.xml"/>
         <mapping class="entity.ProductEntity"/>
         <mapping class="entity.PurchaseEntity"/>
-        <mapping resource="entity/PurchaseEntity.hbm.xml"/>
-        <mapping class="entity.UserEntity"/>
-        <mapping resource="entity/UserEntity.hbm.xml"/>
+
         <!-- <property name="connection.username"/> -->
         <!-- <property name="connection.password"/> -->
 

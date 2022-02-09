@@ -6,12 +6,16 @@ import java.util.Objects;
 @Entity
 @Table(name = "passport", schema = "main")
 public class PassportEntity {
+    @Id
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String number;
 
-    @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity userEntity;
+
     public int getId() {
         return id;
     }
@@ -21,13 +25,21 @@ public class PassportEntity {
     }
 
     @Basic
-    @Column(name = "number", nullable = false, length = -1)
+    @Column(name = "number", nullable = false)
     public String getNumber() {
         return number;
     }
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public UserEntity getUser() {
+        return userEntity;
+    }
+
+    public void setUser(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
     @Override

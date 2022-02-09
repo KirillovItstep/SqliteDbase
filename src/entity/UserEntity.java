@@ -6,25 +6,25 @@ import java.util.Objects;
 @Entity
 @Table(name = "user", schema = "main")
 public class UserEntity {
-    private short id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String surname;
     private String name;
     private String patronymic;
     private String login;
     private String password;
 
-    @Id
-    @Column(name = "id", nullable = false)
-    public short getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(short id) {
+    public void setId(int id) {
         this.id = id;
     }
 
     @Basic
-    @Column(name = "surname", nullable = false, length = -1)
+    @Column(name = "surname", nullable = false)
     public String getSurname() {
         return surname;
     }
@@ -34,7 +34,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = false, length = -1)
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -44,7 +44,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "patronymic", nullable = true, length = -1)
+    @Column(name = "patronymic", nullable = true)
     public String getPatronymic() {
         return patronymic;
     }
@@ -54,7 +54,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "login", nullable = true, length = -1)
+    @Column(name = "login", nullable = true)
     public String getLogin() {
         return login;
     }
@@ -64,7 +64,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "password", nullable = true, length = -1)
+    @Column(name = "password", nullable = true)
     public String getPassword() {
         return password;
     }

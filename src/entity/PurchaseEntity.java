@@ -1,22 +1,32 @@
 package entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "purchase", schema = "main")
 public class PurchaseEntity {
-    private short id;
-    private String dateStamp;
-    private short count;
-
     @Id
     @Column(name = "id", nullable = false)
-    public short getId() {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String dateStamp;
+    private int count;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity userEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private ProductEntity productEntity;
+
+    public int getId() {
         return id;
     }
 
-    public void setId(short id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -32,11 +42,11 @@ public class PurchaseEntity {
 
     @Basic
     @Column(name = "count", nullable = false)
-    public short getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(short count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
