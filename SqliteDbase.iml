@@ -25,5 +25,6 @@
     <orderEntry type="library" name="org.glassfish.jaxb:jaxb-jxc:2.3.2" level="project" />
     <orderEntry type="library" name="org.springframework.boot:spring-boot-starter-data-jpa:1.1.0.RELEASE" level="project" />
     <orderEntry type="library" name="com.fasterxml:classmate:1.5.0" level="project" />
+    <orderEntry type="library" name="com.enigmabridge:hibernate4-sqlite-dialect:0.1.2" level="project" />
   </component>
 </module>

@@ -2,6 +2,7 @@ package org.itstep.query;
 
 import entity.CommentEntity;
 import entity.PassportEntity;
+import entity.ProductEntity;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,22 +23,23 @@ public class HibernateRunner {
         //SessionFactory sessionFactory=new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
 
-        /*
-        PassportEntity passportEntity = new PassportEntity();
-        passportEntity.setNumber("2333");
-        session.save(passportEntity);
-
-         */
-
 
         session.beginTransaction();
-        Query query = session.createQuery("from entity.PassportEntity where id = :paramId");
-        query.setParameter("paramId", 1);
-        List list = query.list();
-
-        list.stream().forEach(o -> System.out.println(((PassportEntity) o).getNumber()));
-
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setName("product");
+        productEntity.setPrice(1);
+        session.save(productEntity);
         session.getTransaction().commit();
+
+/*
+        session.beginTransaction();
+        Query query = session.createQuery("from entity.PassportEntity where id = :paramId");
+        query.setParameter("paramId", 2);
+        List list = query.list();
+        list.stream().forEach(o -> System.out.println(((PassportEntity) o).getNumber()));
+        session.getTransaction().commit();
+*/
+
 
         session.close();
 

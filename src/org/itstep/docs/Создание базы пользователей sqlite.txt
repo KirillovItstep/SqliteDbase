@@ -58,6 +58,9 @@ create table passport(
     user_id integer,
 	FOREIGN KEY(user_id) REFERENCES user(id));
 
+Добавить user_id, если не добавился
+UPDATE passport SET user_id = id+1 where id between 1 and 101;
+
 Связь один-к-одному
 SELECT user.id, name, surname, passport.number 
 FROM user

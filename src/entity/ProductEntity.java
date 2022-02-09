@@ -6,18 +6,15 @@ import java.util.Objects;
 @Entity
 @Table(name = "product", schema = "main")
 public class ProductEntity {
-    private short id;
-    private String name;
-    private short price;
 
     @Id
-    @Column(name = "id", nullable = false)
-    public short getId() {
-        return id;
-    }
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String name;
+    private int price;
 
-    public void setId(short id) {
-        this.id = id;
+    public int getId() {
+        return id;
     }
 
     @Basic
@@ -26,17 +23,21 @@ public class ProductEntity {
         return name;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
     @Basic
     @Column(name = "price", nullable = false)
-    public short getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(short price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

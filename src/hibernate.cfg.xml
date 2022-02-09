@@ -8,7 +8,7 @@
         <property name="hibernate.connection.url">
             jdbc:sqlite:C:\Users\vadim\IdeaProjects\SqliteDbase\src\org\itstep\base\dbase.db
         </property>
-        <property name="hibernate.dialect">org.itstep.query.SQLiteDialect</property>
+        <property name="hibernate.dialect">com.enigmabridge.hibernate.dialect.SQLiteDialect</property>
         <mapping class="entity.CommentEntity"/>
         <mapping resource="entity/CommentEntity.hbm.xml"/>
         <mapping class="entity.PassportEntity"/>

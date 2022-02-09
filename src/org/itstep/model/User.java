@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 //org.springframework.boot:spring-boot-starter-data-jpa:1.1.0.RELEASE
 //com.github.gwenn:sqlite-dialect:0.1.2
 //ORM->JPA->Hibernate. Spring boot включает Hibernate
+//com.enigmabridge:hibernate4-sqlite-dialect:0.1.2
 public class User extends Person {
 
     private String login;
