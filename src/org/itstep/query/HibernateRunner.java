@@ -7,10 +7,12 @@ import entity.UserEntity;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 
+import javax.imageio.spi.ServiceRegistry;
 import java.util.List;
 
 public class HibernateRunner {
@@ -19,7 +21,8 @@ public class HibernateRunner {
         Configuration conf = new Configuration().configure("hibernate.cfg.xml");
         StandardServiceRegistryBuilder builder = new
                 StandardServiceRegistryBuilder().applySettings(conf.getProperties());
-        SessionFactory sessionFactory = conf.buildSessionFactory(builder.build());
+        StandardServiceRegistry registry = builder.build();
+        SessionFactory sessionFactory = conf.buildSessionFactory(registry);
 
         //SessionFactory sessionFactory=new Configuration().configure().buildSessionFactory();
         session = sessionFactory.openSession();
@@ -28,6 +31,8 @@ public class HibernateRunner {
         //getUserById(2);
 
         session.close();
+        sessionFactory.close();
+        builder.destroy(registry);
     }
 
     private static void addProduct() {

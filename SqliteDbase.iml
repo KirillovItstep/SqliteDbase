@@ -7,7 +7,9 @@
           <unit-entry name="a.xml" value="d3f09fb6-4bb4-4910-b2b8-1f9c41f79bb0" />
           <unit-entry name="hibernate.cfg.xml" value="d3f09fb6-4bb4-4910-b2b8-1f9c41f79bb0" />
         </datasource-map>
-        <naming-strategy-map />
+        <naming-strategy-map>
+          <unit-entry name="hibernate.cfg.xml" />
+        </naming-strategy-map>
         <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/hibernate.cfg.xml" />
       </configuration>
     </facet>
